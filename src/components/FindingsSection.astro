@@ -1,0 +1,1619 @@
+---
+// FindingsSection.astro - Key findings with interactive visualizations
+---
+<section id="results" class="content-section">
+  <div class="section-container">
+    <h2 class="section-title">Key Findings</h2>
+    <p class="section-description">Our research reveals critical insights about VLM spatial reasoning capabilities through comprehensive forward and inverse world modeling tasks.</p>
+
+    <div class="findings-sections">
+      <!-- Forward/Inverse World Modeling Section -->
+      <div class="finding-category">
+        <h3 class="category-title">Findings from Forward/Inverse World Modeling Tasks</h3>
+        
+        <div class="takeaways-box">
+          <div class="takeaway-header">
+            <span class="bulb-icon">💡</span>
+            <h4>Key Takeaways</h4>
+          </div>
+          <ul class="takeaway-list">
+            <li><em>Inverse consistently surpasses forward, and the margin grows as the horizon \(L\) increases.</em></li>
+            <li><em>Accuracy declines steadily with step length \(L\), and all VLMs drop sharper at long horizons.</em></li>
+            <li><em>Humans demonstrate near-ceiling performance across all tested step lengths.</em></li>
+          </ul>
+        </div>
+
+        <div class="collapsible-header">
+          <span class="collapsible-label">Visualizations</span>
+          <button class="collapse-btn" aria-label="Toggle visualizations">
+            <span class="collapse-icon">−</span>
+          </button>
+        </div>
+
+        <div class="category-content active">
+        <!-- Metric Tabs -->
+        <div class="metric-tabs">
+          <button class="metric-tab active" data-metric="pairwise">Pairwise Accuracy</button>
+          <button class="metric-tab" data-metric="task">Task Accuracy</button>
+        </div>
+
+        <!-- Visualization Container -->
+        <div class="visualization-container">
+          <!-- Left: Radar Chart -->
+          <div class="radar-chart-container">
+            <div class="chart-wrapper">
+              <canvas id="radarChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Right: Model Comparison -->
+          <div class="comparison-container">
+            <!-- Model Selector Buttons -->
+            <div class="model-selector">
+              <button class="model-btn active" data-model="gpt5">GPT-5</button>
+              <button class="model-btn" data-model="gemini">Gemini 2.5 Pro</button>
+              <button class="model-btn" data-model="internvl">InternVL3.5-241B</button>
+              <button class="model-btn" data-model="qwen">Qwen2.5-VL-72B</button>
+            </div>
+
+            <!-- Combined Line + Bar Chart -->
+            <div class="chart-wrapper">
+              <canvas id="comparisonChart"></canvas>
+            </div>
+          </div>
+        </div>
+        </div> <!-- End category-content -->
+      </div>
+
+      <!-- Probing Tasks Section -->
+      <div class="finding-category">
+        <h3 class="category-title">Findings from Probing Tasks</h3>
+        
+        <!-- Global control buttons for all probing categories -->
+        <div class="probing-controls">
+          <button class="probing-control-btn active" data-probing-control="examples">
+            <span class="control-label">Show Examples</span>
+            <span class="control-icon">−</span>
+          </button>
+          <button class="probing-control-btn" data-probing-control="results">
+            <span class="control-label">Show Results</span>
+            <span class="control-icon">+</span>
+          </button>
+        </div>
+
+        <!-- Results View (All Takeaways + Figures) -->
+        <div class="probing-results-view">
+          <!-- Consolidated Takeaways -->
+          <div class="consolidated-takeaways">
+            <div class="takeaways-box">
+              <div class="takeaway-header">
+                <span class="bulb-icon">💡</span>
+                <h4>Key Takeaways</h4>
+              </div>
+              <ul class="takeaway-list">
+                <li><em>GPT-5 mini and InternVL3.5-241B are robust to image realism variations on our tasks.</em></li>
+                <li><em>Large apertures, a fisheye lens, and a high camera will harm models' performance greatly.</em></li>
+                <li><em>GPT-5 mini and InternVL3.5-241B are robust to the robot's appearance.</em></li>
+                <li><em>VLMs exhibit a significant right-handed bias, which is similar to human handedness.</em></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Results Figures -->
+          <div class="results-figures">
+            <h4 style="text-align: center; color: #2a2f6c; margin-bottom: 1.5rem;">Performance Analysis</h4>
+            
+            <!-- Model Toggle Buttons -->
+            <div class="results-model-selector">
+              <button class="results-model-btn active" data-results-model="gpt5">GPT-5 mini</button>
+              <button class="results-model-btn" data-results-model="intern">InternVL3.5-241B-A28B</button>
+            </div>
+
+            <!-- Figure Container -->
+            <div class="results-figure-container">
+              <!-- GPT-5 mini Figure -->
+              <div class="results-figure-item active" data-figure="gpt5">
+                <div class="figure-image-wrapper">
+                  <img src="/probing/gpt-5-mini.png" alt="GPT-5 mini probing results" />
+                </div>
+                <div class="figure-caption">
+                  <p><strong>Probing experiment results with GPT-5 mini on ENACT.</strong> Heatmaps show two-tailed unpaired t-test results against the baseline, using <em>Pairwise Accuracy</em>. \(p&lt;0.05\) is considered <em>significant</em>. Darker red means more significant. \(\Delta\) is the performance change from the baseline. If <em>significant</em> and \(\Delta&lt;0\), the setting is worse than the baseline. C.2 reports the robot's performance on the left- and right-hand predicates, where <em>Mixing</em> is the proportion of ground truth left or right cases that are predicted as the other hand (i.e., mixing one hand into the other). \(\pm\) means standard error.</p>
+                </div>
+              </div>
+
+              <!-- InternVL3.5-241B Figure -->
+              <div class="results-figure-item" data-figure="intern">
+                <div class="figure-image-wrapper">
+                  <img src="/probing/intern.png" alt="InternVL3.5-241B probing results" />
+                </div>
+                <div class="figure-caption">
+                  <p><strong>Probing experiment results with InternVL3.5-241B-A28B on ENACT.</strong> Heatmaps show two-tailed unpaired p-values against the baseline, using <em>Pairwise Accuracy</em>. \(p&lt;0.05\) is considered <em>significant</em>. Darker red means more significant. \(\Delta\) is the performance change from the baseline. If <em>significant</em> and \(\Delta&lt;0\), the setting is worse than the baseline. C.2 reports the robot's performance on the left- and right-hand predicates, where <em>Mixing</em> is the proportion of ground truth left or right cases that are predicted as the other hand (i.e., mixing one hand into the other hand). Note that, although InternVL3.5-241B-A28B performance is less significant than GPT-5 mini, the \(|\Delta|\) across unnatural camera configurations still remains high (\(&gt;0.05\)) when the same settings are significant for GPT-5 mini.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Examples View -->
+        <div class="probing-examples-view active">
+        
+        <!-- Image Realism -->
+        <div class="probing-category">
+          <h4 class="probing-category-title">Image Realism</h4>
+          
+          <div class="takeaways-box">
+            <div class="takeaway-header">
+              <span class="bulb-icon">💡</span>
+              <h4>Key Takeaways</h4>
+            </div>
+            <ul class="takeaway-list">
+              <li><em>GPT-5 mini and InternVL3.5-241B are robust to image realism variations on our tasks.</em></li>
+            </ul>
+          </div>
+
+          <div class="probing-subcategory">
+            <div class="setting-selector">
+              <button class="setting-btn active" data-category="realism" data-setting="ray_tracing_only">Ray Tracing Only</button>
+              <button class="setting-btn" data-category="realism" data-setting="baseline">Baseline</button>
+              <button class="setting-btn" data-category="realism" data-setting="path_tracing">Path Tracing</button>
+              <button class="setting-btn" data-category="realism" data-setting="realistic">Realistic</button>
+            </div>
+
+              <div class="image-comparison-grid">
+                <div class="image-group">
+                  <div class="group-label">Forward</div>
+                  <div class="image-trio">
+                    <div class="image-item">
+                      <img src="/probing/ray_tracing_only/canning_food_1751278778230696_forward_dynamics_ordering_3_steps_1f8c5d2e_cur_state.png" alt="Forward Current State">
+                      <div class="image-caption">Current State</div>
+                    </div>
+                    <div class="image-item">
+                      <img src="/probing/ray_tracing_only/canning_food_1751278778230696_forward_dynamics_ordering_3_steps_1f8c5d2e_next_state_1.png" alt="Forward Next State 1">
+                      <div class="image-caption">Next State 1</div>
+                    </div>
+                    <div class="image-item">
+                      <img src="/probing/ray_tracing_only/canning_food_1751278778230696_forward_dynamics_ordering_3_steps_1f8c5d2e_next_state_2.png" alt="Forward Next State 2">
+                      <div class="image-caption">Next State 2</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="image-group">
+                  <div class="group-label">Inverse</div>
+                  <div class="image-trio">
+                    <div class="image-item">
+                      <img src="/probing/ray_tracing_only/canning_food_1751278778230696_inverse_dynamics_ordering_3_steps_0e8306bc_cur_state.png" alt="Inverse Current State">
+                      <div class="image-caption">Current State</div>
+                    </div>
+                    <div class="image-item">
+                      <img src="/probing/ray_tracing_only/canning_food_1751278778230696_inverse_dynamics_ordering_3_steps_0e8306bc_next_state_1.png" alt="Inverse Next State 1">
+                      <div class="image-caption">Next State 1</div>
+                    </div>
+                    <div class="image-item">
+                      <img src="/probing/ray_tracing_only/canning_food_1751278778230696_inverse_dynamics_ordering_3_steps_0e8306bc_next_state_2.png" alt="Inverse Next State 2">
+                      <div class="image-caption">Next State 2</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <!-- End Image Realism -->
+
+        <!-- Camera Configurations -->
+        <div class="probing-category">
+          <h4 class="probing-category-title">Camera Configurations</h4>
+          
+          <div class="takeaways-box">
+            <div class="takeaway-header">
+              <span class="bulb-icon">💡</span>
+              <h4>Key Takeaways</h4>
+            </div>
+            <ul class="takeaway-list">
+              <li><em>Models perform best on images that resemble what humans typically see.</em></li>
+              <li><em>Large apertures, a fisheye lens, and a high camera will harm models' performance greatly.</em></li>
+            </ul>
+          </div>
+
+          <div class="probing-subcategory">
+            <h5 class="subcategory-title">Camera FOV</h5>
+            <div class="setting-selector">
+              <button class="setting-btn active" data-category="fov" data-setting="aperture_30">Aperture 30</button>
+              <button class="setting-btn" data-category="fov" data-setting="baseline">Baseline (40)</button>
+              <button class="setting-btn" data-category="fov" data-setting="aperture_60">Aperture 60</button>
+              <button class="setting-btn" data-category="fov" data-setting="aperture_80">Aperture 80</button>
+              <button class="setting-btn" data-category="fov" data-setting="fisheye">Fisheye</button>
+            </div>
+
+              <div class="image-comparison-grid">
+                <div class="image-group">
+                  <div class="group-label">Forward</div>
+                  <div class="image-trio">
+                    <div class="image-item">
+                      <img src="/probing/aperture_30/canning_food_1751278778230696_forward_dynamics_ordering_3_steps_1f8c5d2e_cur_state.png" alt="Forward Current State">
+                      <div class="image-caption">Current State</div>
+                    </div>
+                    <div class="image-item">
+                      <img src="/probing/aperture_30/canning_food_1751278778230696_forward_dynamics_ordering_3_steps_1f8c5d2e_next_state_1.png" alt="Forward Next State 1">
+                      <div class="image-caption">Next State 1</div>
+                    </div>
+                    <div class="image-item">
+                      <img src="/probing/aperture_30/canning_food_1751278778230696_forward_dynamics_ordering_3_steps_1f8c5d2e_next_state_2.png" alt="Forward Next State 2">
+                      <div class="image-caption">Next State 2</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="image-group">
+                  <div class="group-label">Inverse</div>
+                  <div class="image-trio">
+                    <div class="image-item">
+                      <img src="/probing/aperture_30/canning_food_1751278778230696_inverse_dynamics_ordering_3_steps_0e8306bc_cur_state.png" alt="Inverse Current State">
+                      <div class="image-caption">Current State</div>
+                    </div>
+                    <div class="image-item">
+                      <img src="/probing/aperture_30/canning_food_1751278778230696_inverse_dynamics_ordering_3_steps_0e8306bc_next_state_1.png" alt="Inverse Next State 1">
+                      <div class="image-caption">Next State 1</div>
+                    </div>
+                    <div class="image-item">
+                      <img src="/probing/aperture_30/canning_food_1751278778230696_inverse_dynamics_ordering_3_steps_0e8306bc_next_state_2.png" alt="Inverse Next State 2">
+                      <div class="image-caption">Next State 2</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="probing-subcategory">
+              <h5 class="subcategory-title">Camera Height</h5>
+              <div class="setting-selector">
+                <button class="setting-btn active" data-category="height" data-setting="high">High</button>
+                <button class="setting-btn" data-category="height" data-setting="baseline">Baseline (Mid)</button>
+                <button class="setting-btn" data-category="height" data-setting="low">Low</button>
+              </div>
+
+              <div class="image-comparison-grid">
+                <div class="image-group">
+                  <div class="group-label">Forward</div>
+                  <div class="image-trio">
+                    <div class="image-item">
+                      <img src="/probing/high/canning_food_1751278778230696_forward_dynamics_ordering_3_steps_1f8c5d2e_cur_state.png" alt="Forward Current State">
+                      <div class="image-caption">Current State</div>
+                    </div>
+                    <div class="image-item">
+                      <img src="/probing/high/canning_food_1751278778230696_forward_dynamics_ordering_3_steps_1f8c5d2e_next_state_1.png" alt="Forward Next State 1">
+                      <div class="image-caption">Next State 1</div>
+                    </div>
+                    <div class="image-item">
+                      <img src="/probing/high/canning_food_1751278778230696_forward_dynamics_ordering_3_steps_1f8c5d2e_next_state_2.png" alt="Forward Next State 2">
+                      <div class="image-caption">Next State 2</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="image-group">
+                  <div class="group-label">Inverse</div>
+                  <div class="image-trio">
+                    <div class="image-item">
+                      <img src="/probing/high/canning_food_1751278778230696_inverse_dynamics_ordering_3_steps_0e8306bc_cur_state.png" alt="Inverse Current State">
+                      <div class="image-caption">Current State</div>
+                    </div>
+                    <div class="image-item">
+                      <img src="/probing/high/canning_food_1751278778230696_inverse_dynamics_ordering_3_steps_0e8306bc_next_state_1.png" alt="Inverse Next State 1">
+                      <div class="image-caption">Next State 1</div>
+                    </div>
+                    <div class="image-item">
+                      <img src="/probing/high/canning_food_1751278778230696_inverse_dynamics_ordering_3_steps_0e8306bc_next_state_2.png" alt="Inverse Next State 2">
+                      <div class="image-caption">Next State 2</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <!-- End Camera Configurations -->
+
+        <!-- Embodied Biases -->
+        <div class="probing-category">
+          <h4 class="probing-category-title">Embodied Biases</h4>
+          
+          <div class="takeaways-box">
+            <div class="takeaway-header">
+              <span class="bulb-icon">💡</span>
+              <h4>Key Takeaways</h4>
+            </div>
+            <ul class="takeaway-list">
+              <li><em>GPT-5 mini and InternVL3.5-241B are robust to the robot's appearance.</em></li>
+              <li><em>VLMs exhibit a significant right-handed bias, which is similar to human handedness.</em></li>
+            </ul>
+          </div>
+
+          <div class="probing-subcategory">
+            <h5 class="subcategory-title">Robot Appearance</h5>
+            <div class="setting-selector">
+              <button class="setting-btn active" data-category="appearance" data-setting="white_color">White Color</button>
+              <button class="setting-btn" data-category="appearance" data-setting="baseline">Baseline</button>
+              <button class="setting-btn" data-category="appearance" data-setting="random_color">Random Color</button>
+            </div>
+
+              <div class="image-comparison-grid">
+                <div class="image-group">
+                  <div class="group-label">Forward</div>
+                  <div class="image-trio">
+                    <div class="image-item">
+                      <img src="/probing/white_color/canning_food_1751278778230696_forward_dynamics_ordering_3_steps_1f8c5d2e_cur_state.png" alt="Forward Current State">
+                      <div class="image-caption">Current State</div>
+                    </div>
+                    <div class="image-item">
+                      <img src="/probing/white_color/canning_food_1751278778230696_forward_dynamics_ordering_3_steps_1f8c5d2e_next_state_1.png" alt="Forward Next State 1">
+                      <div class="image-caption">Next State 1</div>
+                    </div>
+                    <div class="image-item">
+                      <img src="/probing/white_color/canning_food_1751278778230696_forward_dynamics_ordering_3_steps_1f8c5d2e_next_state_2.png" alt="Forward Next State 2">
+                      <div class="image-caption">Next State 2</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="image-group">
+                  <div class="group-label">Inverse</div>
+                  <div class="image-trio">
+                    <div class="image-item">
+                      <img src="/probing/white_color/canning_food_1751278778230696_inverse_dynamics_ordering_3_steps_0e8306bc_cur_state.png" alt="Inverse Current State">
+                      <div class="image-caption">Current State</div>
+                    </div>
+                    <div class="image-item">
+                      <img src="/probing/white_color/canning_food_1751278778230696_inverse_dynamics_ordering_3_steps_0e8306bc_next_state_1.png" alt="Inverse Next State 1">
+                      <div class="image-caption">Next State 1</div>
+                    </div>
+                    <div class="image-item">
+                      <img src="/probing/white_color/canning_food_1751278778230696_inverse_dynamics_ordering_3_steps_0e8306bc_next_state_2.png" alt="Inverse Next State 2">
+                      <div class="image-caption">Next State 2</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <!-- End Embodied Biases -->
+
+        </div> <!-- End Examples View -->
+
+      </div> <!-- End Probing Tasks Category -->
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Increase container width for findings section */
+  #results .section-container {
+    max-width: 1400px;
+  }
+
+  .findings-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .finding-category {
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid #e0e0e0;
+    transition: all 0.3s ease;
+  }
+
+  .finding-category:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
+  }
+
+  .finding-category:nth-child(1) {
+    border-left-color: #1976d2;
+  }
+
+  .finding-category:nth-child(2) {
+    border-left-color: #4caf50;
+  }
+
+  .category-title {
+    color: #2a2f6c;
+    font-size: 1.6rem;
+    margin-bottom: 2rem;
+    border-bottom: 3px solid #2a2f6c;
+    padding-bottom: 0.75rem;
+    font-weight: 700;
+  }
+
+  .collapsible-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1.5rem 0 1rem 0;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+  }
+
+  .collapsible-label {
+    color: #495057;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: Georgia, serif;
+  }
+
+  .collapse-btn {
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
+    flex-shrink: 0;
+  }
+
+  .collapse-btn:hover {
+    background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.4);
+  }
+
+  .collapse-icon {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 1;
+    transition: transform 0.3s ease;
+  }
+
+  .collapse-btn.collapsed .collapse-icon {
+    transform: rotate(180deg);
+  }
+
+  .category-content {
+    max-height: 5000px;
+    overflow: hidden;
+    transition: max-height 0.5s ease, opacity 0.3s ease;
+    opacity: 1;
+  }
+
+  .category-content:not(.active) {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+  }
+
+  .category-content.active {
+    margin-top: 0;
+  }
+
+  .takeaways-box {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 2px solid #2196f3;
+  }
+
+  .takeaway-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .takeaway-header h4 {
+    color: #1565c0;
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .bulb-icon {
+    font-size: 1.2rem;
+  }
+
+  .takeaway-list {
+    margin: 0;
+    padding-left: 1.5rem;
+    list-style-type: disc;
+  }
+
+  .takeaway-list li {
+    color: #1565c0;
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+  }
+
+  /* Metric Tabs */
+  .metric-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #e0e0e0;
+  }
+
+  .metric-tab {
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: #666;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: Georgia, serif;
+  }
+
+  .metric-tab:hover {
+    color: #2a2f6c;
+    background: rgba(42, 47, 108, 0.05);
+  }
+
+  .metric-tab.active {
+    color: #1976d2;
+    border-bottom-color: #1976d2;
+  }
+
+  /* Visualization Container */
+  .visualization-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .radar-chart-container {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e9ecef;
+  }
+
+  .comparison-container {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e9ecef;
+  }
+
+  .chart-wrapper {
+    position: relative;
+    height: 450px;
+  }
+
+  .chart-wrapper canvas {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Model Selector Buttons */
+  .model-selector {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .model-btn {
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    color: #495057;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: Georgia, serif;
+  }
+
+  .model-btn:hover {
+    background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+    border-color: #1976d2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.2);
+  }
+
+  .model-btn.active {
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+    border-color: #1565c0;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+  }
+
+  /* Probing Tasks Styles */
+  .probing-controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    border: 2px solid #dee2e6;
+  }
+
+  .probing-control-btn {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: Georgia, serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .probing-control-btn:hover {
+    background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+    border-color: #4caf50;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+  }
+
+  .probing-control-btn.active {
+    background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+    border-color: #2e7d32;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+  }
+
+  .control-label {
+    color: #495057;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .probing-control-btn.active .control-label {
+    color: #ffffff;
+  }
+
+  .control-icon {
+    color: #495057;
+    font-size: 1.3rem;
+    font-weight: bold;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  }
+
+  .probing-control-btn.active .control-icon {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .probing-category {
+    margin-bottom: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 2px solid #e9ecef;
+  }
+
+  .probing-category:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .probing-category-title {
+    color: #2a2f6c;
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+  }
+
+  .probing-results-view,
+  .probing-examples-view {
+    display: none !important;
+  }
+
+  .probing-results-view.active,
+  .probing-examples-view.active {
+    display: block !important;
+  }
+
+  .consolidated-takeaways {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .takeaway-section {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e9ecef;
+  }
+
+  .takeaway-section-title {
+    color: #2a2f6c;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e9ecef;
+  }
+
+  .results-figures {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e9ecef;
+  }
+
+  .results-model-selector {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+    padding: 0.75rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 10px;
+  }
+
+  .results-model-btn {
+    flex: 1;
+    max-width: 300px;
+    padding: 0.875rem 1.5rem;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    color: #495057;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: Georgia, serif;
+  }
+
+  .results-model-btn:hover {
+    background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+    border-color: #4caf50;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+  }
+
+  .results-model-btn.active {
+    background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+    border-color: #2e7d32;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+  }
+
+  .results-figure-container {
+    position: relative;
+    width: 100%;
+  }
+
+  .results-figure-item {
+    display: none;
+    animation: fadeIn 0.4s ease;
+  }
+
+  .results-figure-item.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .figure-image-wrapper {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e9ecef;
+  }
+
+  .figure-image-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 6px;
+  }
+
+  .figure-caption {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid #4caf50;
+  }
+
+  .figure-caption p {
+    color: #495057;
+    line-height: 1.8;
+    margin: 0;
+    font-size: 0.95rem;
+    font-family: Georgia, serif;
+  }
+
+  .figure-caption strong {
+    color: #2a2f6c;
+  }
+
+  .figure-caption em {
+    font-style: italic;
+    color: #1565c0;
+  }
+
+  .probing-subcategory {
+    margin-top: 2rem;
+  }
+
+  .subcategory-title {
+    color: #495057;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .setting-selector {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .setting-btn {
+    padding: 0.6rem 1.2rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    color: #495057;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: Georgia, serif;
+  }
+
+  .setting-btn:hover {
+    background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+    border-color: #4caf50;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+  }
+
+  .setting-btn.active {
+    background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+    border-color: #2e7d32;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+  }
+
+  .image-comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  .image-group {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .group-label {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2a2f6c;
+    margin-bottom: 1rem;
+    text-align: center;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #e9ecef;
+  }
+
+  .image-trio {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .image-item {
+    text-align: center;
+  }
+
+  .image-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .image-item img:hover {
+    border-color: #4caf50;
+    box-shadow: 0 4px 16px rgba(76, 175, 80, 0.2);
+    transform: scale(1.02);
+  }
+
+  .image-caption {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 0.5rem;
+    font-weight: 500;
+  }
+
+  /* Responsive design */
+  @media (max-width: 1024px) {
+    .visualization-container {
+      grid-template-columns: 1fr;
+    }
+
+    .chart-wrapper {
+      height: 400px;
+    }
+
+    .image-comparison-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .finding-category {
+      padding: 1.5rem;
+    }
+
+    .takeaways-box {
+      padding: 1rem;
+    }
+
+    .model-selector {
+      grid-template-columns: 1fr;
+    }
+
+    .chart-wrapper {
+      height: 350px;
+    }
+
+    .metric-tabs {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .metric-tab {
+      border-bottom: none;
+      border-left: 3px solid transparent;
+      text-align: left;
+    }
+
+    .metric-tab.active {
+      border-bottom-color: transparent;
+      border-left-color: #1976d2;
+    }
+
+    .image-comparison-grid {
+      padding: 1rem;
+    }
+
+    .image-trio {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .setting-selector {
+      flex-direction: column;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    // Collapse/Expand functionality
+    const collapseButtons = document.querySelectorAll('.collapse-btn');
+    
+    collapseButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const collapsibleHeader = btn.closest('.collapsible-header');
+        const categoryContent = collapsibleHeader?.nextElementSibling as HTMLElement;
+        const icon = btn.querySelector('.collapse-icon');
+        
+        if (categoryContent && icon) {
+          const isActive = categoryContent.classList.contains('active');
+          
+          if (isActive) {
+            // Collapse
+            categoryContent.classList.remove('active');
+            btn.classList.add('collapsed');
+            icon.textContent = '+';
+          } else {
+            // Expand
+            categoryContent.classList.add('active');
+            btn.classList.remove('collapsed');
+            icon.textContent = '−';
+          }
+        }
+      });
+    });
+
+    // Probing control buttons functionality (Examples / Results toggle)
+    const probingControlButtons = document.querySelectorAll('.probing-control-btn');
+    
+    probingControlButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const control = btn.getAttribute('data-probing-control');
+        if (!control) return;
+        
+        // Update active state
+        probingControlButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Update icon
+        probingControlButtons.forEach(b => {
+          const icon = b.querySelector('.control-icon');
+          if (icon) {
+            icon.textContent = b.classList.contains('active') ? '−' : '+';
+          }
+        });
+        
+        // Toggle between Examples View and Results View
+        const examplesView = document.querySelector('.probing-examples-view');
+        const resultsView = document.querySelector('.probing-results-view');
+        
+        if (control === 'examples') {
+          // Show examples view, hide results view
+          if (examplesView) examplesView.classList.add('active');
+          if (resultsView) resultsView.classList.remove('active');
+        } else if (control === 'results') {
+          // Hide examples view, show results view
+          if (examplesView) examplesView.classList.remove('active');
+          if (resultsView) resultsView.classList.add('active');
+          
+          // Trigger MathJax to render formulas in captions
+          if ((window as any).MathJax) {
+            (window as any).MathJax.typesetPromise().catch((err: any) => console.log('MathJax typeset error:', err));
+          }
+        }
+      });
+    });
+
+    // Results model toggle functionality
+    const resultsModelButtons = document.querySelectorAll('.results-model-btn');
+    
+    resultsModelButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const model = btn.getAttribute('data-results-model');
+        if (!model) return;
+        
+        // Update active state for buttons
+        resultsModelButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Update active figure
+        const figures = document.querySelectorAll('.results-figure-item');
+        figures.forEach(fig => {
+          const figModel = fig.getAttribute('data-figure');
+          if (figModel === model) {
+            fig.classList.add('active');
+          } else {
+            fig.classList.remove('active');
+          }
+        });
+        
+        // Trigger MathJax to render formulas in the newly displayed caption
+        if ((window as any).MathJax) {
+          (window as any).MathJax.typesetPromise().catch((err: any) => console.log('MathJax typeset error:', err));
+        }
+      });
+    });
+
+    // Probing images switching functionality
+    const settingButtons = document.querySelectorAll('.setting-btn');
+    
+    settingButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const category = btn.getAttribute('data-category');
+        const setting = btn.getAttribute('data-setting');
+        
+        if (!category || !setting) return;
+        
+        // Update active state for buttons in the same category
+        const sameCategoryButtons = document.querySelectorAll(`.setting-btn[data-category="${category}"]`);
+        sameCategoryButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Find the image grid for this subcategory
+        const subcategory = btn.closest('.probing-subcategory');
+        if (!subcategory) return;
+        
+        const images = subcategory.querySelectorAll('img');
+        
+        // Update all image sources based on setting
+        images.forEach(img => {
+          const src = img.getAttribute('src');
+          if (!src) return;
+          
+          // Extract the filename part after the last slash
+          const parts = src.split('/');
+          const filename = parts[parts.length - 1];
+          
+          // Construct new path
+          const newSrc = `/probing/${setting}/${filename}`;
+          img.setAttribute('src', newSrc);
+        });
+      });
+    });
+
+    // Dynamically import Chart.js
+    const { Chart, registerables } = await import('chart.js');
+    Chart.register(...registerables);
+
+    // Performance data for both metrics
+    const performanceData = {
+      pairwise: {
+        models: {
+          gpt5: {
+            name: 'GPT-5',
+            forward: [84.62, 75.26, 69.96, 64.18, 57.48, 52.16, 49.45, 46.93],
+            inverse: [86.28, 80.37, 76.09, 68.78, 65.71, 62.13, 57.12, 55.33],
+            color: 'rgba(255, 99, 132, 0.8)',
+            borderColor: 'rgb(255, 99, 132)'
+          },
+          gemini: {
+            name: 'Gemini 2.5 Pro',
+            forward: [86.10, 76.42, 69.83, 60.80, 53.26, 48.12, 40.12, 36.98],
+            inverse: [87.94, 81.18, 75.39, 70.03, 66.03, 62.91, 57.78, 56.62],
+            color: 'rgba(54, 162, 235, 0.8)',
+            borderColor: 'rgb(54, 162, 235)'
+          },
+          internvl: {
+            name: 'InternVL3.5-241B',
+            forward: [75.79, 62.25, 50.83, 45.85, 37.84, 32.88, 27.85, 25.24],
+            inverse: [82.26, 70.09, 60.61, 53.38, 45.90, 39.35, 34.12, 30.56],
+            color: 'rgba(255, 206, 86, 0.8)',
+            borderColor: 'rgb(255, 206, 86)'
+          },
+          qwen: {
+            name: 'Qwen2.5-VL-72B',
+            forward: [78.15, 60.05, 49.87, 41.92, 36.77, 31.73, 28.03, 25.07],
+            inverse: [77.80, 65.85, 53.30, 48.19, 44.07, 37.57, 33.76, 36.27],
+            color: 'rgba(153, 102, 255, 0.8)',
+            borderColor: 'rgb(153, 102, 255)'
+          }
+        },
+        human: {
+          forward: [93.62, 95.30, 95.04, 93.87, 95.43, 95.41, 94.75, 95.13],
+          inverse: [92.05, 93.56, 94.35, 94.25, 95.96, 97.74, 96.30, 96.29]
+        }
+      },
+      task: {
+        models: {
+          gpt5: {
+            name: 'GPT-5',
+            forward: [80.59, 62.72, 47.13, 33.62, 20.24, 11.58, 7.30, 5.00],
+            inverse: [86.19, 72.65, 59.65, 43.73, 33.68, 24.04, 17.15, 13.00],
+            color: 'rgba(255, 99, 132, 0.8)',
+            borderColor: 'rgb(255, 99, 132)'
+          },
+          gemini: {
+            name: 'Gemini 2.5 Pro',
+            forward: [81.99, 62.72, 47.30, 29.79, 17.80, 10.00, 3.28, 3.60],
+            inverse: [87.76, 73.52, 58.61, 43.38, 33.51, 23.68, 15.88, 14.40],
+            color: 'rgba(54, 162, 235, 0.8)',
+            borderColor: 'rgb(54, 162, 235)'
+          },
+          internvl: {
+            name: 'InternVL3.5-241B',
+            forward: [67.83, 43.38, 21.22, 12.02, 4.71, 1.05, 0.36, 0.00],
+            inverse: [81.99, 59.76, 40.35, 24.22, 15.18, 7.37, 4.56, 2.00],
+            color: 'rgba(255, 206, 86, 0.8)',
+            borderColor: 'rgb(255, 206, 86)'
+          },
+          qwen: {
+            name: 'Qwen2.5-VL-72B',
+            forward: [71.68, 40.42, 18.96, 7.84, 3.32, 1.23, 0.00, 0.00],
+            inverse: [75.87, 53.48, 29.74, 17.77, 11.52, 4.74, 1.46, 0.40],
+            color: 'rgba(153, 102, 255, 0.8)',
+            borderColor: 'rgb(153, 102, 255)'
+          }
+        },
+        human: {
+          forward: [90.38, 92.16, 89.74, 85.71, 88.31, 87.02, 85.58, 84.00],
+          inverse: [91.78, 90.24, 88.70, 88.15, 89.53, 92.28, 87.73, 85.00]
+        }
+      }
+    };
+
+    const stepLabels = [3, 4, 5, 6, 7, 8, 9, 10];
+
+    // State management
+    let currentMetric: 'pairwise' | 'task' = 'pairwise';
+    let currentModel: 'gpt5' | 'gemini' | 'internvl' | 'qwen' = 'gpt5';
+    let radarChart: any = null;
+    let comparisonChart: any = null;
+
+    // Initialize charts
+    initializeCharts();
+
+    // Metric tabs functionality
+    const metricTabs = document.querySelectorAll('.metric-tab');
+    metricTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        metricTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const metric = tab.getAttribute('data-metric') as 'pairwise' | 'task';
+        if (metric) {
+          currentMetric = metric;
+          updateCharts();
+        }
+      });
+    });
+
+    // Model selector functionality
+    const modelBtns = document.querySelectorAll('.model-btn');
+    modelBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        modelBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const model = btn.getAttribute('data-model') as 'gpt5' | 'gemini' | 'internvl' | 'qwen';
+        if (model) {
+          currentModel = model;
+          updateComparisonChart();
+        }
+      });
+    });
+
+    function initializeCharts() {
+      createRadarChart();
+      createComparisonChart();
+    }
+
+    function createRadarChart() {
+      const ctx = document.getElementById('radarChart') as HTMLCanvasElement;
+      if (!ctx) return;
+
+      const data = performanceData[currentMetric];
+      const radarSteps = [3, 5, 7, 10]; // Indices: 0, 2, 4, 7
+      const radarIndices = [0, 2, 4, 7];
+
+      const datasets = (Object.keys(data.models) as Array<keyof typeof data.models>).map(modelKey => {
+        const model = data.models[modelKey];
+        const radarData = [
+          ...radarIndices.map(i => model.forward[i]), // Forward 3,5,7,10
+          ...radarIndices.map(i => model.inverse[i])  // Inverse 3,5,7,10
+        ];
+        
+        return {
+          label: model.name,
+          data: radarData,
+          backgroundColor: model.color.replace('0.8', '0.2'),
+          borderColor: model.borderColor,
+          borderWidth: 2,
+          pointBackgroundColor: model.borderColor,
+          pointBorderColor: '#fff',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: model.borderColor
+        };
+      });
+
+      // Add human performance
+      const humanData = [
+        ...radarIndices.map(i => data.human.forward[i]),
+        ...radarIndices.map(i => data.human.inverse[i])
+      ];
+      datasets.push({
+        label: 'Human',
+        data: humanData,
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: 'rgb(75, 192, 192)',
+        borderWidth: 3,
+        pointBackgroundColor: 'rgb(75, 192, 192)',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: 'rgb(75, 192, 192)'
+      });
+
+      const radarLabels = [
+        'Fwd-3', 'Fwd-5', 'Fwd-7', 'Fwd-10',
+        'Inv-3', 'Inv-5', 'Inv-7', 'Inv-10'
+      ];
+
+      radarChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: radarLabels,
+          datasets: datasets
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: true,
+              text: 'Model Performance Overview',
+              font: { size: 16, weight: 'bold', family: 'Georgia' },
+              color: '#2a2f6c',
+              padding: 20
+            },
+            legend: {
+              position: 'bottom',
+              labels: {
+                font: { family: 'Georgia', size: 11 },
+                usePointStyle: true,
+                padding: 10
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(255, 255, 255, 0.98)',
+              titleColor: '#333',
+              bodyColor: '#666',
+              borderColor: '#ddd',
+              borderWidth: 1,
+              cornerRadius: 8,
+              titleFont: { family: 'Georgia', size: 13 },
+              bodyFont: { family: 'Georgia', size: 12 },
+              callbacks: {
+                label: function(context) {
+                  return `${context.dataset.label}: ${context.parsed.r.toFixed(2)}%`;
+                }
+              }
+            }
+          },
+          scales: {
+            r: {
+              beginAtZero: true,
+              max: 100,
+              ticks: {
+                stepSize: 20,
+                font: { family: 'Georgia', size: 10 }
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.1)'
+              },
+              pointLabels: {
+                font: { family: 'Georgia', size: 11, weight: 'bold' }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function createComparisonChart() {
+      const ctx = document.getElementById('comparisonChart') as HTMLCanvasElement;
+      if (!ctx) return;
+
+      const data = performanceData[currentMetric];
+      const model = data.models[currentModel];
+
+      comparisonChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: stepLabels,
+          datasets: [
+            {
+              type: 'line',
+              label: 'Human Forward',
+              data: data.human.forward,
+              borderColor: '#5A8FC8',
+              backgroundColor: 'rgba(90, 143, 200, 0.1)',
+              borderWidth: 3,
+              pointRadius: 5,
+              pointBackgroundColor: '#5A8FC8',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              tension: 0.3,
+              fill: false,
+              order: 1
+            },
+            {
+              type: 'line',
+              label: 'Human Inverse',
+              data: data.human.inverse,
+              borderColor: '#5FA863',
+              backgroundColor: 'rgba(95, 168, 99, 0.1)',
+              borderWidth: 3,
+              pointRadius: 5,
+              pointBackgroundColor: '#5FA863',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              tension: 0.3,
+              fill: false,
+              order: 2
+            },
+            {
+              type: 'bar',
+              label: `${model.name} Forward`,
+              data: model.forward,
+              backgroundColor: '#F0F6FD',
+              borderColor: '#5A8FC8',
+              borderWidth: 2,
+              borderRadius: 6,
+              order: 3,
+              hoverBackgroundColor: '#F0F6FD',
+              hoverBorderColor: '#5A8FC8',
+              hoverBorderWidth: 2
+            },
+            {
+              type: 'bar',
+              label: `${model.name} Inverse`,
+              data: model.inverse,
+              backgroundColor: '#F0F6F0',
+              borderColor: '#5FA863',
+              borderWidth: 2,
+              borderRadius: 6,
+              order: 4,
+              hoverBackgroundColor: '#F0F6F0',
+              hoverBorderColor: '#5FA863',
+              hoverBorderWidth: 2
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: true,
+              text: `${model.name} vs Human Performance`,
+              font: { size: 16, weight: 'bold', family: 'Georgia' },
+              color: '#2a2f6c',
+              padding: 20
+            },
+            legend: {
+              position: 'bottom',
+              labels: {
+                font: { family: 'Georgia', size: 11 },
+                usePointStyle: true,
+                padding: 10
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(255, 255, 255, 0.98)',
+              titleColor: '#333',
+              bodyColor: '#666',
+              borderColor: '#ddd',
+              borderWidth: 1,
+              cornerRadius: 8,
+              mode: 'index',
+              intersect: false,
+              titleFont: { family: 'Georgia', size: 13 },
+              bodyFont: { family: 'Georgia', size: 12 },
+              callbacks: {
+                label: function(context) {
+                  return `${context.dataset.label}: ${context.parsed.y.toFixed(2)}%`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              ticks: {
+                font: { family: 'Georgia' },
+                callback: function(value) {
+                  return value + '%';
+                }
+              }
+            },
+            x: {
+              title: {
+                display: true,
+                text: 'Step Length (L)',
+                font: { size: 13, family: 'Georgia', weight: 'bold' },
+                color: '#2a2f6c'
+              },
+              grid: {
+                display: false
+              },
+              ticks: {
+                font: { family: 'Georgia', size: 11 }
+              }
+            }
+          },
+          interaction: {
+            mode: 'index',
+            intersect: false
+          }
+        }
+      });
+    }
+
+    function updateCharts() {
+      updateRadarChart();
+      updateComparisonChart();
+    }
+
+    function updateRadarChart() {
+      if (!radarChart) return;
+
+      const data = performanceData[currentMetric];
+      const radarIndices = [0, 2, 4, 7];
+
+      // Update model datasets
+      (Object.keys(data.models) as Array<keyof typeof data.models>).forEach((modelKey, index) => {
+        const model = data.models[modelKey];
+        const radarData = [
+          ...radarIndices.map(i => model.forward[i]),
+          ...radarIndices.map(i => model.inverse[i])
+        ];
+        radarChart.data.datasets[index].data = radarData;
+      });
+
+      // Update human dataset
+      const humanData = [
+        ...radarIndices.map(i => data.human.forward[i]),
+        ...radarIndices.map(i => data.human.inverse[i])
+      ];
+      radarChart.data.datasets[radarChart.data.datasets.length - 1].data = humanData;
+
+      radarChart.update('active');
+    }
+
+    function updateComparisonChart() {
+      if (!comparisonChart) return;
+
+      const data = performanceData[currentMetric];
+      const model = data.models[currentModel];
+
+      // Update human data (first two datasets - lines)
+      comparisonChart.data.datasets[0].data = data.human.forward;
+      comparisonChart.data.datasets[1].data = data.human.inverse;
+
+      // Update model data (last two datasets - bars)
+      comparisonChart.data.datasets[2].data = model.forward;
+      comparisonChart.data.datasets[2].label = `${model.name} Forward`;
+      comparisonChart.data.datasets[2].backgroundColor = '#F0F6FD';
+      comparisonChart.data.datasets[2].borderColor = '#5A8FC8';
+      comparisonChart.data.datasets[2].hoverBackgroundColor = '#F0F6FD';
+      comparisonChart.data.datasets[2].hoverBorderColor = '#5A8FC8';
+
+      comparisonChart.data.datasets[3].data = model.inverse;
+      comparisonChart.data.datasets[3].label = `${model.name} Inverse`;
+      comparisonChart.data.datasets[3].backgroundColor = '#F0F6F0';
+      comparisonChart.data.datasets[3].borderColor = '#5FA863';
+      comparisonChart.data.datasets[3].hoverBackgroundColor = '#F0F6F0';
+      comparisonChart.data.datasets[3].hoverBorderColor = '#5FA863';
+
+      // Update title
+      comparisonChart.options.plugins.title.text = `${model.name} vs Human Performance`;
+
+      comparisonChart.update('active');
+    }
+
+    // Trigger MathJax to render formulas after page load
+    if ((window as any).MathJax) {
+      (window as any).MathJax.typesetPromise().catch((err: any) => console.log('MathJax typeset error:', err));
+    }
+  });
+</script> 

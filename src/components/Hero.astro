@@ -1,0 +1,201 @@
+---
+// Hero.astro - Teaser section with project overview
+---
+<section id="hero" class="content-section hero-section">
+  <div class="title-wrapper">
+    <div class="title-with-logo">
+      <img src="/icon.png" alt="ENACT Logo" class="title-logo">
+      <h5 class="main-title" id="animated-title">
+        <span class="title-line">ENACT: Evaluating Embodied Cognition with</span>
+        <span class="title-line">World Modeling of Egocentric Interaction</span>
+      </h5>
+    </div>
+  </div>
+  
+  <p class="main-subtitle">
+     ENACT evaluates embodied cognition through egocentric interaction world modeling. Notably, it has a <strong>simple and scalable</strong> dataset pipeline design.
+  </p>
+
+
+  <div class="authors-section">
+    <div class="authors-list">
+      <p class="author-line">
+        <a href="https://qinengwang-aiden.github.io/">Qineng Wang<sup class="affiliation-marker">1*</sup></a>, 
+        <a href="">Wenlong Huang<sup class="affiliation-marker">2*</sup></a>,
+        <a href="">Yu Zhou<sup class="affiliation-marker">3</sup></a>, 
+        <a href="">Hang Yin<sup class="affiliation-marker">2</sup></a>,
+        <a href="">Tianwei Bao<sup class="affiliation-marker">1</sup></a>, 
+        <a href="">Jianwen Lyu<sup class="affiliation-marker">1</sup></a>, 
+        <a href="">Weiyu Liu<sup class="affiliation-marker">2</sup></a>
+      </p>
+      <!-- <p class="author-line">
+      </p> -->
+      <p class="author-line">
+        <a href="">Ruohan Zhang<sup class="affiliation-marker">2†</sup></a>, 
+        <a href="https://jiajunwu.com/">Jiajun Wu<sup class="affiliation-marker">2†</sup></a>, 
+        <a href="https://profiles.stanford.edu/fei-fei-li">Li Fei-Fei<sup class="affiliation-marker">2†</sup></a>, 
+        <a href="https://limanling.github.io/">Manling Li<sup class="affiliation-marker">1†</sup></a>
+      </p>
+      <p class="equal-contribution">*Equal contribution, †Equal advising</p>
+      <p class="affiliations">
+        <sup class="affiliation-marker">1</sup>Northwestern University, 
+        <sup class="affiliation-marker">2</sup>Stanford University, 
+        <sup class="affiliation-marker">3</sup>UCLA
+      </p>
+    </div>
+  </div>  
+
+  <div class="resources-section">
+    <div class="resources-buttons">
+      <a href="https://github.com/QinengWang-Aiden/ENACT" class="cta-button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="button-icon" aria-hidden="true">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+        </svg>
+        <span class="button-text">Code</span>
+      </a>
+
+      <a href="" class="resource-button">
+        <i class="fas fa-file-alt resource-icon"></i>
+        <span>Paper (Coming Soon)</span>
+      </a>
+      <a href="https://huggingface.co/datasets/Inevitablevalor/ENACT" class="resource-button">
+        <i class="fas fa-database resource-icon"></i>
+        <span>Dataset</span>
+      </a>
+      <a href="#dataset-viewer" class="resource-button">
+        <i class="fas fa-table resource-icon"></i>
+        <span>Data Viewer</span>
+      </a>
+      <a href="" class="resource-button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="resource-icon x-icon" aria-hidden="true">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+        </svg>
+        <span>tl;dr (Coming Soon)</span>
+      </a>
+    </div>
+  </div>
+  <div class="teaser-figure">
+      <img src="/teaser.png" alt="Spatial Mental Modeling Challenge" />
+  </div>
+
+</section> 
+
+<script>
+  // Format numbers to show 'k' for thousands
+  function formatNumber(num: number) {
+    return num > 999 ? (num / 1000).toFixed(1) + 'k' : num;
+  }
+
+  // Fetch GitHub stats directly
+  async function fetchGitHubStats() {
+    try {
+      // Try to use default numbers immediately
+      const starsElement = document.getElementById('hero-stars-count');
+      const forksElement = document.getElementById('hero-forks-count');
+      
+      // Fetch latest stats from GitHub
+      const response = await fetch('https://api.github.com/repos/QinengWang-Aiden/ENACT');
+      const data = await response.json();
+      
+      const stars = data.stargazers_count;
+      const forks = data.forks_count;
+      
+      // Update stars count if available and different from default
+      if (starsElement && stars !== undefined) {
+        const formattedStars = formatNumber(stars);
+        if (formattedStars !== '1.4k') {
+          starsElement.textContent = formattedStars;
+        }
+      }
+      
+      // Update forks count if available and different from default
+      if (forksElement && forks !== undefined) {
+        const formattedForks = formatNumber(forks);
+        if (formattedForks !== '105') {
+          forksElement.textContent = formattedForks;
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching GitHub stats:', error);
+      // Keep default values on error
+    }
+  }
+
+  // Run when page is loaded
+  document.addEventListener('DOMContentLoaded', fetchGitHubStats);
+</script> 
+
+<style>
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 24px;
+    background: linear-gradient(45deg, #2a2f6c, #4b4f8f);
+    border: none;
+    border-radius: 50px;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(42, 47, 108, 0.2);
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(42, 47, 108, 0.3);
+    text-decoration: none;
+  }
+
+  .button-icon {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+  }
+
+  .button-text {
+    margin-right: 12px;
+  }
+
+  .repo-stats {
+    display: flex;
+    gap: 16px;
+    padding-left: 16px;
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: white;
+    font-size: 16px;
+  }
+
+  .stat-item svg {
+    fill: currentColor;
+  }
+
+  .main-subtitle {
+    max-width: 800px;
+    margin: 20px auto 0;
+    color: #555;
+    font-size: 18px;
+    line-height: 1.6;
+    text-align: center;
+    font-weight: 400;
+  }
+
+  .vagen-announcement {
+    color: #2a2f6c;
+    font-size: 0.9em;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .vagen-announcement:hover {
+    color: #4b4f8f;
+    text-decoration: none;
+  }
+</style> 

@@ -1,0 +1,82 @@
+---
+// ENACT Dataset Viewer Component
+---
+
+<section id="dataset-viewer" class="dataset-section">
+  <div class="container">
+    <!-- Section Header -->
+    <div class="section-header">
+      <h2 class="section-title">Dataset Viewer</h2>
+      <p class="section-subtitle">
+        Explore the <strong>ENACT</strong> dataset for embodied world modeling tasks.
+      </p>
+    </div>
+
+    <!-- Main Viewer -->
+    <div class="viewer-container">
+      <!-- Controls Panel -->
+      <div class="controls-panel">
+        <div class="control-group">
+          <label>World Modeling:</label>
+          <select id="setting-select" class="control-select">
+            <option value="forward" selected>Forward World Modeling</option>
+            <option value="inverse">Inverse World Modeling</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label>Task Name:</label>
+          <select id="task-select" class="control-select">
+            <option value="">Loading...</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label>Step Length:</label>
+          <select id="step-select" class="control-select">
+            <option value="">Loading...</option>
+          </select>
+        </div>
+
+        <div class="navigation-controls">
+          <button id="prev-btn" class="nav-button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            Previous
+          </button>
+          <button id="next-btn" class="nav-button">
+            Next
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Content Display -->
+      <div id="data-display" class="content-display">
+        <!-- Loading State -->
+        <div class="loading-state">
+          <div class="spinner-container">
+            <div class="spinner"></div>
+            <p>Loading dataset...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  // Import dataset viewer functionality
+  import { initDatasetViewer } from '../scripts/datasetViewer.js';
+  
+  // Initialize when DOM is ready
+  if (typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', () => {
+      initDatasetViewer();
+    });
+  }
+</script> 

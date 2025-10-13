@@ -1,0 +1,598 @@
+---
+// Algorithm.astro - Leaderboard section showing model performance comparisons
+---
+
+<section id="leaderboard" class="content-section alt-background">
+  <div class="section-container">
+    <h2 class="section-title">Leaderboard</h2>
+    <p class="section-description">Performance comparison of different models on our embodied cognition benchmark. Dark highlighting indicates the best result within each category, light highlighting denotes the second-best.</p>
+    
+    <div class="leaderboard-container">
+      <!-- Metric Tabs -->
+      <div class="metric-tabs">
+        <button class="metric-tab active" data-metric="pairwise">Pairwise Accuracy</button>
+        <button class="metric-tab" data-metric="task">Task Accuracy</button>
+      </div>
+
+      <div class="table-controls">
+        <p class="sort-info">Click on column headers to sort the results</p>
+        <div class="model-legend">
+          <span class="legend-item">
+            <span class="legend-color proprietary-legend"></span>
+            Proprietary Models
+          </span>
+          <span class="legend-item">
+            <span class="legend-color open-weight-legend"></span>
+            Open-Weight Models
+          </span>
+          <span class="legend-item">
+            <span class="legend-color human-legend"></span>
+            Human Performance
+          </span>
+        </div>
+      </div>
+      
+      <div class="table-wrapper">
+        <table class="leaderboard-table" id="leaderboardTable">
+          <thead>
+            <tr>
+              <th rowspan="2" class="model-header sortable" data-column="0">
+                Model
+                <span class="sort-arrow">↕</span>
+              </th>
+              <th colspan="8" class="category-header forward-header">Forward World Modeling</th>
+              <th colspan="8" class="category-header inverse-header">Inverse World Modeling</th>
+            </tr>
+            <tr>
+              <th class="step-header sortable" data-column="1">3<span class="sort-arrow">↕</span></th>
+              <th class="step-header sortable" data-column="2">4<span class="sort-arrow">↕</span></th>
+              <th class="step-header sortable" data-column="3">5<span class="sort-arrow">↕</span></th>
+              <th class="step-header sortable" data-column="4">6<span class="sort-arrow">↕</span></th>
+              <th class="step-header sortable" data-column="5">7<span class="sort-arrow">↕</span></th>
+              <th class="step-header sortable" data-column="6">8<span class="sort-arrow">↕</span></th>
+              <th class="step-header sortable" data-column="7">9<span class="sort-arrow">↕</span></th>
+              <th class="step-header sortable" data-column="8">10<span class="sort-arrow">↕</span></th>
+              <th class="step-header sortable" data-column="9">3<span class="sort-arrow">↕</span></th>
+              <th class="step-header sortable" data-column="10">4<span class="sort-arrow">↕</span></th>
+              <th class="step-header sortable" data-column="11">5<span class="sort-arrow">↕</span></th>
+              <th class="step-header sortable" data-column="12">6<span class="sort-arrow">↕</span></th>
+              <th class="step-header sortable" data-column="13">7<span class="sort-arrow">↕</span></th>
+              <th class="step-header sortable" data-column="14">8<span class="sort-arrow">↕</span></th>
+              <th class="step-header sortable" data-column="15">9<span class="sort-arrow">↕</span></th>
+              <th class="step-header sortable" data-column="16">10<span class="sort-arrow">↕</span></th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody">
+            <!-- Data will be populated by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  /* Increase max-width for leaderboard section to show all columns */
+  #leaderboard .section-container {
+    max-width: 1300px;
+  }
+
+  #leaderboard .leaderboard-container {
+    margin: 2rem 0;
+  }
+
+  /* Metric Tabs */
+  #leaderboard .metric-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  #leaderboard .metric-tab {
+    padding: 0.75rem 2rem;
+    background: white;
+    border: 2px solid #2a2f6c;
+    border-radius: 8px;
+    color: #2a2f6c;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  #leaderboard .metric-tab:hover {
+    background: #f0f4ff;
+  }
+
+  #leaderboard .metric-tab.active {
+    background: #2a2f6c;
+    color: white;
+  }
+
+  #leaderboard .table-controls {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  #leaderboard .sort-info {
+    color: #666;
+    font-style: italic;
+    font-size: 0.9rem;
+    margin: 0 0 1rem 0;
+  }
+
+  #leaderboard .model-legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  #leaderboard .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: #555;
+  }
+
+  #leaderboard .legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+
+  #leaderboard .proprietary-legend {
+    background-color: #FFF4F0;
+  }
+
+  #leaderboard .open-weight-legend {
+    background-color: #F8F0FF;
+  }
+
+  #leaderboard .human-legend {
+    background-color: #FFFAED;
+  }
+
+  #leaderboard .table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    background: white;
+  }
+
+  #leaderboard .leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  #leaderboard .leaderboard-table thead tr:first-child th {
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  }
+
+  /* Table Headers */
+  #leaderboard .model-header {
+    background: linear-gradient(135deg, #e0e0e0, #e8e8e8);
+    color: #333;
+    padding: 1rem 0.8rem;
+    text-align: left;
+    font-weight: 600;
+    border-right: 2px solid rgba(0, 0, 0, 0.1);
+    min-width: 200px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+
+  #leaderboard .model-header:hover {
+    background: linear-gradient(135deg, #e8e8e8, #f0f0f0);
+  }
+
+  #leaderboard .category-header {
+    padding: 0.8rem 0.5rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-right: 2px solid rgba(0, 0, 0, 0.1);
+  }
+
+  #leaderboard .forward-header {
+    background: #F0F6FD;
+    color: #2a2f6c;
+  }
+
+  #leaderboard .inverse-header {
+    background: #F0F6F0;
+    color: #2a2f6c;
+  }
+
+  #leaderboard .step-header {
+    background: linear-gradient(135deg, #e8e8e8, #f0f0f0);
+    color: #333;
+    padding: 0.8rem 0.5rem;
+    text-align: center;
+    font-weight: 500;
+    font-size: 0.9rem;
+    border-right: 1px solid rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+    position: relative;
+    white-space: nowrap;
+  }
+
+  #leaderboard .step-header:hover {
+    background: linear-gradient(135deg, #f0f0f0, #f5f5f5);
+  }
+
+  #leaderboard .sortable .sort-arrow {
+    margin-left: 0.3rem;
+    opacity: 0.5;
+    font-size: 0.75rem;
+  }
+
+  #leaderboard .sortable.sorted-asc .sort-arrow {
+    opacity: 1;
+  }
+
+  #leaderboard .sortable.sorted-asc .sort-arrow::after {
+    content: " ↑";
+    color: #2a2f6c;
+    font-weight: bold;
+  }
+
+  #leaderboard .sortable.sorted-desc .sort-arrow {
+    opacity: 1;
+  }
+
+  #leaderboard .sortable.sorted-desc .sort-arrow::after {
+    content: " ↓";
+    color: #2a2f6c;
+    font-weight: bold;
+  }
+
+  #leaderboard .leaderboard-table th:last-child {
+    border-right: none;
+  }
+
+  /* Table Body Cells */
+  #leaderboard .leaderboard-table td {
+    padding: 0.75rem 0.6rem;
+    text-align: center;
+    border-bottom: 1px solid #e8e8e8;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+  }
+
+  #leaderboard .leaderboard-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  #leaderboard .model-name {
+    text-align: left !important;
+    font-weight: 500;
+    color: #2a2f6c;
+    padding-left: 1rem !important;
+    min-width: 200px;
+    border-right: 1px solid #e0e0e0;
+  }
+
+  /* Model Type Backgrounds */
+  #leaderboard .proprietary-model {
+    background-color: #FFF4F0 !important;
+  }
+
+  #leaderboard .proprietary-model:hover {
+    background-color: #FFE8E0 !important;
+  }
+
+  #leaderboard .open-weight-model {
+    background-color: #F8F0FF !important;
+  }
+
+  #leaderboard .open-weight-model:hover {
+    background-color: #F0E5FF !important;
+  }
+
+  #leaderboard .human-model {
+    background-color: #FFFAED !important;
+    font-weight: 600;
+  }
+
+  #leaderboard .human-model:hover {
+    background-color: #FFF5DC !important;
+  }
+
+  /* Score Highlighting */
+  #leaderboard .best-score {
+    background-color: rgba(100, 100, 100, 0.25) !important;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  #leaderboard .second-best-score {
+    background-color: rgba(169, 169, 169, 0.15) !important;
+    font-weight: 600;
+    color: #333;
+  }
+
+  /* Responsive design */
+  @media (max-width: 1200px) {
+    #leaderboard .leaderboard-table {
+      font-size: 0.8rem;
+    }
+
+    #leaderboard .leaderboard-table th,
+    #leaderboard .leaderboard-table td {
+      padding: 0.6rem 0.4rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    #leaderboard .leaderboard-table {
+      font-size: 0.7rem;
+    }
+
+    #leaderboard .leaderboard-table th,
+    #leaderboard .leaderboard-table td {
+      padding: 0.5rem 0.3rem;
+    }
+
+    #leaderboard .model-name {
+      font-size: 0.7rem;
+      min-width: 120px;
+      padding-left: 0.5rem !important;
+    }
+
+    #leaderboard .model-legend {
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    #leaderboard .legend-item {
+      font-size: 0.85rem;
+    }
+
+    #leaderboard .metric-tabs {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    #leaderboard .metric-tab {
+      padding: 0.6rem 1rem;
+      font-size: 0.9rem;
+    }
+
+    #leaderboard .category-header {
+      font-size: 0.75rem;
+      padding: 0.6rem 0.3rem;
+    }
+    
+    #leaderboard .step-header {
+      font-size: 0.75rem;
+      padding: 0.6rem 0.3rem;
+    }
+
+    #leaderboard .sort-arrow {
+      font-size: 0.65rem !important;
+    }
+  }
+</style>
+
+<script>
+  // Data structure for both metrics
+  const leaderboardData = {
+    pairwise: {
+      proprietary: [
+        { name: 'GPT-5', forward: [84.62, 75.26, 69.96, 64.18, 57.48, 52.16, 49.45, 46.93], inverse: [86.28, 80.37, 76.09, 68.78, 65.71, 62.13, 57.12, 55.33], highlights: { forward: [0, 0, 2, 1, 2, 2, 1, 1], inverse: [2, 2, 1, 2, 2, 2, 2, 2] } },
+        { name: 'GPT-5 mini', forward: [87.50, 76.25, 70.65, 63.41, 58.14, 52.38, 46.65, 44.11], inverse: [85.05, 76.77, 75.43, 67.67, 63.79, 57.04, 55.04, 50.02], highlights: { forward: [1, 2, 1, 2, 1, 1, 2, 2], inverse: [0, 0, 2, 0, 0, 0, 0, 0] } },
+        { name: 'GPT-5 nano', forward: [67.83, 50.29, 38.61, 30.35, 25.97, 21.90, 17.59, 16.84], inverse: [72.81, 53.95, 42.48, 36.45, 31.68, 28.20, 24.11, 20.33], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Gemini 2.5 Pro', forward: [86.10, 76.42, 69.83, 60.80, 53.26, 48.12, 40.12, 36.98], inverse: [87.94, 81.18, 75.39, 70.03, 66.03, 62.91, 57.78, 56.62], highlights: { forward: [2, 1, 0, 0, 0, 0, 0, 0], inverse: [1, 1, 0, 1, 1, 1, 1, 1] } },
+        { name: 'Gemini 2.5 Flash', forward: [81.64, 67.94, 54.17, 43.38, 37.43, 32.73, 29.88, 28.07], inverse: [82.78, 72.18, 60.83, 58.19, 53.14, 51.78, 47.99, 44.98], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Gemini 2.5 Flash-Lite', forward: [64.34, 49.07, 38.70, 33.87, 27.81, 25.44, 23.31, 20.31], inverse: [69.58, 57.55, 46.04, 39.09, 34.06, 30.18, 27.51, 23.16], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Claude Sonnet 4', forward: [65.65, 45.82, 36.65, 30.52, 26.61, 22.78, 21.49, 20.16], inverse: [73.25, 56.85, 48.87, 43.07, 37.00, 32.71, 30.50, 28.49], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } }
+      ],
+      openweight: [
+        { name: 'GLM-4.5V', forward: [74.30, 59.99, 47.65, 38.78, 30.83, 25.69, 21.60, 19.67], inverse: [80.59, 69.28, 57.04, 51.53, 46.95, 41.68, 37.36, 37.93], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [2, 2, 2, 2, 2, 2, 2, 2] } },
+        { name: 'GLM-4.1V-Thinking', forward: [67.31, 49.48, 38.43, 31.29, 25.80, 21.50, 20.14, 18.73], inverse: [75.35, 56.27, 46.57, 36.79, 29.61, 24.56, 23.91, 25.80], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Llama-4-Scout-17B-16E-Ins', forward: [68.18, 42.62, 34.30, 30.52, 28.50, 26.57, 25.94, 31.20], inverse: [66.00, 50.00, 41.30, 37.04, 29.73, 25.61, 22.45, 26.54], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 1], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Llama-4-Mav-17B-128E-Ins', forward: [72.47, 52.09, 43.87, 35.30, 29.90, 25.89, 22.79, 20.49], inverse: [72.55, 62.60, 50.52, 43.10, 35.17, 31.68, 28.10, 25.80], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'InternVL3.5-241B-A28B', forward: [75.79, 62.25, 50.83, 45.85, 37.84, 32.88, 27.85, 25.24], inverse: [82.26, 70.09, 60.61, 53.38, 45.90, 39.35, 34.12, 30.56], highlights: { forward: [2, 1, 1, 1, 1, 1, 2, 0], inverse: [1, 1, 1, 1, 0, 0, 0, 0] } },
+        { name: 'InternVL3.5-14B', forward: [54.90, 36.53, 27.87, 25.47, 22.02, 18.73, 18.29, 20.60], inverse: [69.06, 59.52, 49.00, 43.45, 37.61, 32.28, 29.31, 28.58], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'InternVL3.5-8B', forward: [64.42, 44.83, 31.48, 24.32, 23.62, 21.50, 19.30, 25.47], inverse: [65.03, 56.10, 45.35, 37.67, 35.02, 29.62, 26.41, 23.60], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'InternVL3.5-4B', forward: [63.11, 42.04, 30.26, 26.13, 21.73, 20.28, 19.64, 21.98], inverse: [64.95, 50.12, 41.61, 35.78, 29.00, 26.57, 27.55, 24.04], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Gemma-3-27b-it', forward: [63.29, 44.66, 32.04, 25.82, 22.11, 19.50, 16.74, 16.29], inverse: [64.95, 48.37, 40.04, 33.87, 28.53, 23.63, 21.74, 19.36], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Gemma-3-12b-it', forward: [62.33, 43.55, 32.78, 25.68, 22.45, 20.40, 17.70, 16.71], inverse: [53.23, 43.79, 34.43, 29.90, 25.57, 22.31, 21.60, 18.16], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Gemma-3-4b-it', forward: [61.98, 41.17, 35.70, 35.16, 30.51, 26.17, 26.73, 25.80], inverse: [53.06, 36.41, 29.52, 26.38, 22.66, 24.44, 33.71, 33.62], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'QVQ-72B-Preview', forward: [69.14, 52.96, 40.83, 36.27, 33.16, 30.63, 26.30, 24.76], inverse: [71.33, 58.77, 48.43, 44.36, 40.26, 39.30, 36.66, 36.58], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Qwen2.5-VL-72B-Ins', forward: [78.15, 60.05, 49.87, 41.92, 36.77, 31.73, 28.03, 25.07], inverse: [77.80, 65.85, 53.30, 48.19, 44.07, 37.57, 33.76, 36.27], highlights: { forward: [1, 2, 2, 2, 2, 2, 1, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Qwen2.5-VL-32B-Ins', forward: [67.83, 55.46, 44.35, 35.75, 27.52, 26.42, 22.01, 18.07], inverse: [63.55, 59.70, 54.57, 51.01, 49.36, 47.17, 41.47, 40.16], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 1, 1, 1, 1] } },
+        { name: 'Qwen2.5-VL-7B-Ins', forward: [26.84, 43.90, 32.00, 23.07, 19.66, 16.69, 11.82, 11.31], inverse: [70.54, 56.45, 42.43, 32.89, 25.07, 19.52, 16.72, 17.42], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Qwen2.5-VL-3B-Ins', forward: [58.22, 35.31, 30.57, 24.08, 20.36, 17.44, 14.87, 15.07], inverse: [57.43, 49.13, 40.48, 34.88, 28.33, 26.14, 22.97, 20.51], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Ovis2.5-9B', forward: [58.39, 42.51, 34.96, 31.08, 24.61, 20.78, 18.11, 16.96], inverse: [64.86, 51.74, 41.65, 35.47, 30.95, 26.64, 23.70, 23.25], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Ovis2.5-2B', forward: [46.94, 38.85, 32.65, 26.86, 25.63, 22.21, 22.49, 24.87], inverse: [54.28, 44.08, 35.43, 29.06, 27.84, 25.56, 27.62, 29.29], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'MiniCPM-V-4.5', forward: [60.75, 38.73, 33.65, 25.47, 24.81, 21.40, 21.56, 18.33], inverse: [69.23, 53.08, 47.35, 39.55, 34.87, 30.63, 27.05, 25.71], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'MiniCPM-o-2.6', forward: [35.31, 39.37, 29.48, 31.78, 27.66, 26.39, 24.59, 27.42], inverse: [54.11, 48.26, 44.70, 40.00, 38.28, 36.12, 33.23, 31.71], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 2], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Idefics3-8B-Llama3', forward: [60.23, 36.99, 31.83, 24.25, 21.29, 20.80, 20.46, 17.71], inverse: [47.38, 33.86, 27.26, 23.48, 19.87, 18.50, 17.04, 15.16], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Cosmos-Reason1', forward: [56.28, 41.86, 34.75, 28.40, 26.46, 26.49, 25.41, 24.88], inverse: [58.30, 45.93, 44.25, 38.50, 35.72, 34.56, 31.50, 28.64], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } }
+      ],
+      human: { name: 'Human Performance', forward: [93.62, 95.30, 95.04, 93.87, 95.43, 95.41, 94.75, 95.13], inverse: [92.05, 93.56, 94.35, 94.25, 95.96, 97.74, 96.30, 96.29] }
+    },
+    task: {
+      proprietary: [
+        { name: 'GPT-5', forward: [80.59, 62.72, 47.13, 33.62, 20.24, 11.58, 7.30, 5.00], inverse: [86.19, 72.65, 59.65, 43.73, 33.68, 24.04, 17.15, 13.00], highlights: { forward: [0, 1, 2, 1, 1, 1, 1, 1], inverse: [2, 2, 1, 1, 1, 1, 1, 2] } },
+        { name: 'GPT-5 mini', forward: [83.39, 62.72, 45.22, 31.71, 19.02, 9.12, 5.29, 2.80], inverse: [84.79, 67.42, 58.09, 41.11, 29.67, 18.07, 13.50, 8.60], highlights: { forward: [1, 1, 0, 2, 2, 0, 2, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'GPT-5 nano', forward: [58.57, 30.66, 9.74, 3.83, 1.40, 0.00, 0.00, 0.00], inverse: [72.03, 39.02, 17.22, 8.19, 3.14, 1.05, 0.36, 0.00], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Gemini 2.5 Pro', forward: [81.99, 62.72, 47.30, 29.79, 17.80, 10.00, 3.28, 3.60], inverse: [87.76, 73.52, 58.61, 43.38, 33.51, 23.68, 15.88, 14.40], highlights: { forward: [2, 1, 1, 0, 0, 2, 0, 2], inverse: [1, 1, 2, 2, 2, 2, 2, 1] } },
+        { name: 'Gemini 2.5 Flash', forward: [75.52, 50.52, 25.22, 14.29, 6.28, 2.98, 1.28, 0.20], inverse: [82.52, 61.15, 38.96, 27.70, 17.98, 13.86, 6.20, 3.80], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Gemini 2.5 Flash-Lite', forward: [52.97, 27.18, 10.09, 3.83, 1.40, 0.18, 0.18, 0.00], inverse: [69.06, 42.33, 19.83, 8.54, 4.71, 0.88, 0.73, 0.00], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Claude Sonnet 4', forward: [56.29, 24.91, 8.52, 2.96, 0.70, 0.00, 0.00, 0.00], inverse: [72.73, 42.16, 24.17, 13.59, 6.98, 2.63, 1.46, 1.00], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } }
+      ],
+      openweight: [
+        { name: 'GLM-4.5V', forward: [66.08, 40.77, 18.09, 8.54, 1.57, 0.35, 0.18, 0.00], inverse: [79.55, 57.32, 32.52, 20.38, 11.69, 5.44, 1.64, 0.40], highlights: { forward: [0, 2, 0, 2, 0, 0, 2, 0], inverse: [2, 2, 2, 2, 2, 2, 2, 0] } },
+        { name: 'GLM-4.1V-Thinking', forward: [57.52, 28.40, 11.30, 2.26, 0.35, 0.18, 0.00, 0.00], inverse: [73.43, 39.37, 12.00, 4.53, 0.87, 0.53, 0.00, 0.00], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Llama-4-Scout-17B-16E-Ins', forward: [58.74, 21.43, 5.04, 1.74, 0.70, 0.18, 0.00, 0.00], inverse: [64.34, 34.32, 10.26, 2.96, 1.75, 0.00, 0.18, 0.00], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Llama-4-Mav-17B-128E-Ins', forward: [63.99, 32.58, 14.78, 4.36, 1.57, 0.35, 0.00, 0.00], inverse: [71.50, 49.30, 24.35, 11.85, 4.19, 1.58, 0.55, 0.00], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'InternVL3.5-241B-A28B', forward: [67.83, 43.38, 21.22, 12.02, 4.71, 1.05, 0.36, 0.00], inverse: [81.99, 59.76, 40.35, 24.22, 15.18, 7.37, 4.56, 2.00], highlights: { forward: [2, 1, 1, 1, 1, 2, 1, 0], inverse: [1, 1, 1, 1, 1, 1, 1, 1] } },
+        { name: 'InternVL3.5-14B', forward: [46.33, 14.81, 3.48, 1.05, 0.00, 0.00, 0.00, 0.00], inverse: [66.43, 45.12, 23.65, 11.85, 5.93, 1.93, 1.28, 0.40], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'InternVL3.5-8B', forward: [54.72, 25.09, 5.39, 1.05, 1.22, 0.18, 0.00, 0.00], inverse: [63.99, 40.24, 20.00, 6.79, 3.49, 0.53, 0.36, 0.20], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'InternVL3.5-4B', forward: [54.55, 22.13, 6.43, 2.09, 0.52, 0.00, 0.00, 0.00], inverse: [63.64, 32.93, 16.00, 5.75, 2.27, 0.53, 0.18, 0.00], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Gemma-3-27b-it', forward: [53.15, 22.82, 5.57, 0.87, 0.17, 0.18, 0.00, 0.00], inverse: [63.46, 31.88, 14.61, 5.05, 1.57, 0.35, 0.00, 0.60], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 2] } },
+        { name: 'Gemma-3-12b-it', forward: [51.22, 21.78, 6.09, 1.05, 0.17, 0.00, 0.00, 0.00], inverse: [52.80, 27.53, 9.74, 2.79, 1.75, 0.35, 0.00, 0.00], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Gemma-3-4b-it', forward: [52.80, 20.56, 1.57, 0.17, 0.70, 0.00, 0.00, 0.00], inverse: [52.45, 18.12, 3.83, 1.92, 0.17, 0.00, 0.00, 0.00], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'QVQ-72B-Preview', forward: [60.84, 29.79, 8.17, 2.09, 0.70, 0.00, 0.00, 0.00], inverse: [66.96, 40.24, 16.87, 6.97, 3.84, 1.23, 0.55, 0.00], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Qwen2.5-VL-72B-Ins', forward: [71.68, 40.42, 18.96, 7.84, 3.32, 1.23, 0.00, 0.00], inverse: [75.87, 53.48, 29.74, 17.77, 11.52, 4.74, 1.46, 0.40], highlights: { forward: [1, 0, 2, 0, 2, 1, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Qwen2.5-VL-32B-Ins', forward: [51.40, 32.75, 10.09, 3.48, 0.52, 0.00, 0.00, 0.00], inverse: [39.34, 33.45, 19.13, 8.89, 6.11, 2.11, 0.91, 0.00], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Qwen2.5-VL-7B-Ins', forward: [22.73, 23.17, 5.39, 0.52, 0.17, 0.00, 0.00, 0.00], inverse: [70.10, 41.11, 16.52, 5.23, 1.05, 0.00, 0.00, 0.00], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Qwen2.5-VL-3B-Ins', forward: [45.98, 13.76, 5.91, 0.70, 0.17, 0.00, 0.00, 0.00], inverse: [56.64, 32.75, 13.39, 5.75, 1.05, 0.18, 0.00, 0.00], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Ovis2.5-9B', forward: [47.55, 23.00, 10.61, 2.96, 1.05, 0.18, 0.00, 0.00], inverse: [62.76, 35.54, 16.00, 6.27, 1.75, 0.35, 0.00, 0.00], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Ovis2.5-2B', forward: [39.69, 17.77, 5.91, 0.87, 0.52, 0.00, 0.00, 0.00], inverse: [48.43, 23.87, 8.52, 1.57, 0.00, 0.00, 0.00, 0.00], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'MiniCPM-V-4.5', forward: [48.43, 19.16, 8.35, 1.92, 0.52, 0.18, 0.00, 0.00], inverse: [68.01, 37.98, 22.09, 9.41, 3.66, 1.75, 0.18, 0.20], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'MiniCPM-o-2.6', forward: [26.05, 17.07, 5.22, 1.57, 0.00, 0.00, 0.00, 0.00], inverse: [38.64, 27.35, 11.30, 2.44, 0.52, 0.18, 0.00, 0.00], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Idefics3-8B-Llama3', forward: [48.08, 16.20, 2.26, 0.52, 0.17, 0.00, 0.00, 0.00], inverse: [46.33, 16.72, 2.96, 1.57, 0.00, 0.00, 0.00, 0.00], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } },
+        { name: 'Cosmos-Reason1', forward: [45.45, 21.43, 5.04, 0.52, 0.17, 0.00, 0.00, 0.00], inverse: [51.92, 29.09, 12.02, 3.31, 0.52, 0.18, 0.00, 0.00], highlights: { forward: [0, 0, 0, 0, 0, 0, 0, 0], inverse: [0, 0, 0, 0, 0, 0, 0, 0] } }
+      ],
+      human: { name: 'Human Performance', forward: [90.38, 92.16, 89.74, 85.71, 88.31, 87.02, 85.58, 84.00], inverse: [91.78, 90.24, 88.70, 88.15, 89.53, 92.28, 87.73, 85.00] }
+    }
+  };
+
+  let currentMetric = 'pairwise';
+  let currentSort = { column: -1, direction: 'desc' as 'asc' | 'desc' };
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Tab switching
+    const tabs = document.querySelectorAll('.metric-tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentMetric = (tab as HTMLElement).dataset.metric as string;
+        currentSort = { column: -1, direction: 'desc' };
+        renderTable();
+      });
+    });
+
+    // Sorting functionality
+    const sortableHeaders = document.querySelectorAll('.sortable');
+    sortableHeaders.forEach(header => {
+      header.addEventListener('click', () => {
+        const columnIndex = parseInt((header as HTMLElement).dataset.column || '0');
+        sortTable(columnIndex);
+      });
+    });
+
+    // Initial render
+    renderTable();
+  });
+
+  function renderTable() {
+    const tbody = document.getElementById('leaderboardBody');
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+    const data = leaderboardData[currentMetric as keyof typeof leaderboardData];
+
+    // Combine all models into a single array
+    const allModels: any[] = [];
+    
+    data.proprietary.forEach(model => {
+      allModels.push({ ...model, type: 'proprietary' });
+    });
+    
+    data.openweight.forEach(model => {
+      allModels.push({ ...model, type: 'openweight' });
+    });
+    
+    allModels.push({ ...data.human, type: 'human' });
+
+    // Render all models
+    allModels.forEach(model => {
+      tbody.appendChild(createModelRow(model, model.type));
+    });
+  }
+
+  function sortTable(columnIndex: number) {
+    const tbody = document.getElementById('leaderboardBody');
+    if (!tbody) return;
+
+    // Determine sort direction
+    if (currentSort.column === columnIndex) {
+      currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+    } else {
+      currentSort.direction = 'desc';
+      currentSort.column = columnIndex;
+    }
+
+    // Update header indicators
+    const sortableHeaders = document.querySelectorAll('.sortable');
+    sortableHeaders.forEach(h => {
+      h.classList.remove('sorted-asc', 'sorted-desc');
+    });
+    const currentHeader = document.querySelector(`.sortable[data-column="${columnIndex}"]`);
+    if (currentHeader) {
+      currentHeader.classList.add(`sorted-${currentSort.direction}`);
+    }
+
+    // Get all rows
+    const rows = Array.from(tbody.querySelectorAll('tr')) as HTMLTableRowElement[];
+
+    // Sort rows
+    rows.sort((a, b) => {
+      let aVal: any, bVal: any;
+
+      if (columnIndex === 0) {
+        // Model name - string comparison
+        aVal = a.cells[0].textContent || '';
+        bVal = b.cells[0].textContent || '';
+        aVal = aVal.toLowerCase();
+        bVal = bVal.toLowerCase();
+        return currentSort.direction === 'asc' ? 
+          aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+      } else {
+        // Numeric comparison
+        aVal = parseFloat(a.cells[columnIndex]?.textContent || '0');
+        bVal = parseFloat(b.cells[columnIndex]?.textContent || '0');
+        return currentSort.direction === 'asc' ? aVal - bVal : bVal - aVal;
+      }
+    });
+
+    // Re-insert sorted rows
+    rows.forEach(row => tbody.appendChild(row));
+  }
+
+  function createModelRow(model: any, type: string) {
+    const row = document.createElement('tr');
+    row.className = type === 'proprietary' ? 'proprietary-model' : 
+                    type === 'openweight' ? 'open-weight-model' : 
+                    'human-model';
+
+    let html = `<td class="model-name">${model.name}</td>`;
+
+    // Forward World Modeling scores
+    for (let i = 0; i < 8; i++) {
+      const score = model.forward[i];
+      const highlight = model.highlights?.forward?.[i] || 0;
+      const highlightClass = highlight === 1 ? 'best-score' : 
+                            highlight === 2 ? 'second-best-score' : '';
+      html += `<td class="${highlightClass}">${score.toFixed(2)}</td>`;
+    }
+
+    // Inverse World Modeling scores
+    for (let i = 0; i < 8; i++) {
+      const score = model.inverse[i];
+      const highlight = model.highlights?.inverse?.[i] || 0;
+      const highlightClass = highlight === 1 ? 'best-score' : 
+                            highlight === 2 ? 'second-best-score' : '';
+      html += `<td class="${highlightClass}">${score.toFixed(2)}</td>`;
+    }
+
+    row.innerHTML = html;
+    return row;
+  }
+</script> 
