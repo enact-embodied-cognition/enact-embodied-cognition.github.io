@@ -17,9 +17,9 @@
             <h4>Key Takeaways</h4>
           </div>
           <ul class="takeaway-list">
-            <li><em>Inverse consistently surpasses forward, and the margin grows as the horizon \(L\) increases.</em></li>
-            <li><em>Accuracy declines steadily with step length \(L\), and all VLMs drop sharper at long horizons.</em></li>
-            <li><em>Humans demonstrate near-ceiling performance across all tested step lengths.</em></li>
+            <li><em>Higher performance on the inverse task than the forward one highlights stronger language-based retrospection than action-conditioned visual reasoning.</em></li>
+            <li><em>Long-horizon degradation reveals limited interactive, spatial memory under partial observability.</em></li>
+            <li><em>The human–model gap shows that current VLMs are still far from robust embodied world models in mobile manipulation settings.</em></li>
           </ul>
         </div>
 
@@ -91,10 +91,11 @@
                 <h4>Key Takeaways</h4>
               </div>
               <ul class="takeaway-list">
-                <li><em>GPT-5 mini and InternVL3.5-241B are robust to image realism variations on our tasks.</em></li>
-                <li><em>Large apertures, a fisheye lens, and a high camera will harm models' performance greatly.</em></li>
-                <li><em>GPT-5 mini and InternVL3.5-241B are robust to the robot's appearance.</em></li>
-                <li><em>VLMs exhibit a significant right-handed bias, which is similar to human handedness.</em></li>
+                <li><em>Insensitivity to rendering variations indicates bottlenecks in multi-step interaction reasoning rather than low-level image realism.</em></li>
+                <li><em>Performance degradation on non-standard views implies VLMs are biased towards human-like egocentric viewpoints and intrinsics.</em></li>
+                <li><em>Reliance on human-centric visual priors limits generalization to diverse robotic embodiments with non-standard optics.</em></li>
+                <li><em>VLMs are robust to the embodiment appearance variations.</em></li>
+                <li><em>VLMs exhibit strong right-handed bias, which is consistent with human handedness distribution.</em></li>
               </ul>
             </div>
           </div>
@@ -147,7 +148,7 @@
               <h4>Key Takeaways</h4>
             </div>
             <ul class="takeaway-list">
-              <li><em>GPT-5 mini and InternVL3.5-241B are robust to image realism variations on our tasks.</em></li>
+              <li><em>Insensitivity to rendering variations indicates bottlenecks in multi-step interaction reasoning rather than low-level image realism.</em></li>
             </ul>
           </div>
 
@@ -202,7 +203,7 @@
 
         <!-- Camera Configurations -->
         <div class="probing-category">
-          <h4 class="probing-category-title">Camera Configurations</h4>
+          <h4 class="probing-category-title">Anthropocentric Bias on Human Vision</h4>
           
           <div class="takeaways-box">
             <div class="takeaway-header">
@@ -210,8 +211,8 @@
               <h4>Key Takeaways</h4>
             </div>
             <ul class="takeaway-list">
-              <li><em>Models perform best on images that resemble what humans typically see.</em></li>
-              <li><em>Large apertures, a fisheye lens, and a high camera will harm models' performance greatly.</em></li>
+              <li><em>Performance degradation on non-standard views implies VLMs are biased towards human-like egocentric viewpoints and intrinsics.</em></li>
+              <li><em>Reliance on human-centric visual priors limits generalization to diverse robotic embodiments with non-standard optics.</em></li>
             </ul>
           </div>
 
@@ -315,7 +316,7 @@
 
         <!-- Embodied Biases -->
         <div class="probing-category">
-          <h4 class="probing-category-title">Embodied Biases</h4>
+          <h4 class="probing-category-title">Anthropocentric bias on Embodiment</h4>
           
           <div class="takeaways-box">
             <div class="takeaway-header">
@@ -323,8 +324,8 @@
               <h4>Key Takeaways</h4>
             </div>
             <ul class="takeaway-list">
-              <li><em>GPT-5 mini and InternVL3.5-241B are robust to the robot's appearance.</em></li>
-              <li><em>VLMs exhibit a significant right-handed bias, which is similar to human handedness.</em></li>
+              <li><em>VLMs are robust to the embodiment appearance variations.</em></li>
+              <li><em>VLMs exhibit strong right-handed bias, which is consistent with human handedness distribution.</em></li>
             </ul>
           </div>
 

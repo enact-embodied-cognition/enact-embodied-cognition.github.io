@@ -126,6 +126,14 @@
   margin: 0 auto;
 }
 
+.teaser-figure video {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 8px;
+}
+
 .teaser-segment-1 {
   animation-delay: 0.3s;
 }
